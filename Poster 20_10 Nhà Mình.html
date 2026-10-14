@@ -1,0 +1,414 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Poster 20/10 Nhà Mình</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Cormorant+Garamond:wght@300;400;500&family=Dancing+Script:wght@500;700&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap">
+<style>
+/* Layout: poster canvas on the left (the hero), a tall control rail on the right; stacks on phones */
+:root{
+  --bg:#fbf4f2; --surface:#ffffff; --ink:#2b1a1d; --muted:#7a6064; --line:#ecd9d8;
+  --accent:#b81f34; --accent-ink:#ffffff; --soft:#f7e3e2; --focus:#e0607a;
+  --f-display:"Playfair Display", Georgia, serif;
+  --f-body:"Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1c1314; --surface:#271b1d; --ink:#f6e9e8; --muted:#bfa3a6; --line:#3d2b2e;
+  --accent:#ef5a6f; --accent-ink:#1c1314; --soft:#33222a; --focus:#ff8fa1; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1c1314; --surface:#271b1d; --ink:#f6e9e8; --muted:#bfa3a6; --line:#3d2b2e;
+  --accent:#ef5a6f; --accent-ink:#1c1314; --soft:#33222a; --focus:#ff8fa1; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:20px 48px}
+header{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;margin-bottom:18px}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(26px,4vw,38px);margin:0;letter-spacing:-.01em;text-wrap:balance}
+h1 em{color:var(--accent);font-style:italic;font-weight:500}
+header p{margin:0;color:var(--muted);max-width:60ch}
+.app{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:28px;align-items:start}
+@media (max-width:880px){.app{grid-template-columns:minmax(0,1fr)}}
+.stage{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);display:grid;gap:12px}
+@media (max-width:880px){.stage{position:static}}
+#poster{width:100%;max-width:560px;aspect-ratio:4/5;height:auto;border-radius:6px;box-shadow:0 18px 50px -20px rgba(80,10,25,.45);touch-action:none;cursor:grab;justify-self:center;background:#eee}
+#poster.dragging{cursor:grabbing}
+.hint{font-size:13px;color:var(--muted);text-align:center;margin:0}
+.rail{display:grid;gap:22px;min-width:0}
+.sec{display:grid;gap:10px}
+.sec h2{font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0}
+.tpls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.tpl{appearance:none;border:2px solid transparent;background:var(--surface);border-radius:8px;padding:5px;cursor:pointer;display:grid;gap:4px;color:var(--ink);font:inherit;font-size:12.5px;text-align:left}
+.tpl canvas{width:100%;aspect-ratio:4/5;height:auto;border-radius:4px;display:block}
+.tpl[aria-pressed="true"]{border-color:var(--accent)}
+.tpl:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible,.seg button:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.slots{display:grid;gap:8px}
+.slot{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:grid;grid-template-columns:52px minmax(0,1fr);gap:4px 12px;align-items:center}
+.slot.sel{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.thumb{width:52px;height:52px;border-radius:50%;background:var(--soft) center/cover no-repeat;grid-row:span 2;display:grid;place-items:center;color:var(--muted);font-size:20px;cursor:pointer;border:none}
+.slot-top{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.slot-top input[type=text]{flex:1 1 90px;min-width:0;border:none;background:transparent;font:inherit;font-weight:600;color:var(--ink);padding:2px 0;border-bottom:1px dashed var(--line)}
+.slot-ctl{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.slot-ctl input[type=range]{flex:1 1 90px;min-width:70px;accent-color:var(--accent)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.seg button{appearance:none;border:none;background:transparent;color:var(--muted);font:inherit;font-size:12px;padding:4px 10px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.btn{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:13px;font-weight:500;border-radius:999px;padding:6px 14px;cursor:pointer}
+.btn.small{padding:3px 10px;font-size:12px}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600;font-size:15px;padding:12px 22px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.fields{display:grid;gap:10px}
+.fields label{display:grid;gap:4px;font-size:13px;color:var(--muted)}
+.fields input,.fields textarea{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px;resize:vertical}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.status{font-size:13px;color:var(--muted)}
+.tips{background:var(--soft);border-radius:10px;padding:12px 14px;font-size:13.5px;color:var(--ink)}
+.tips ol{margin:6px 0 0;padding-left:20px;display:grid;gap:3px}
+.tips a{color:var(--accent)}
+.modal{position:fixed;inset:0;background:rgba(20,8,10,.7);display:grid;place-items:center;padding:16px;z-index:10}
+.modal .box{background:var(--surface);border-radius:12px;padding:16px;max-width:460px;width:100%;display:grid;gap:10px;max-height:92vh;overflow:auto}
+.modal img{width:100%;border-radius:6px}
+input[type=file]{display:none}
+[hidden]{display:none!important}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Poster 20/10 <em>Nhà Mình</em></h1>
+    <p>Chọn mẫu, thay từng người trong poster bằng ảnh người thân, rồi tải về để tặng.</p>
+  </header>
+
+  <div class="app">
+    <div class="stage">
+      <canvas id="poster" width="1080" height="1350" aria-label="Bản xem trước poster"></canvas>
+      <p class="hint">Bấm vào một ô người trên poster để chọn. Kéo để dời ảnh, lăn chuột hoặc dùng thanh trượt để phóng to.</p>
+    </div>
+
+    <div class="rail">
+      <section class="sec">
+        <h2>1. Chọn mẫu poster</h2>
+        <div class="tpls" id="tpls"></div>
+      </section>
+
+      <section class="sec">
+        <h2>2. Thay ảnh người thân</h2>
+        <div class="slots" id="slots"></div>
+        <input type="file" id="file" accept="image/*">
+      </section>
+
+      <section class="sec">
+        <h2>3. Lời chúc</h2>
+        <div class="fields">
+          <label for="msg">Lời chúc in trên poster
+            <textarea id="msg" rows="2">Cảm ơn những người phụ nữ tuyệt vời của nhà mình. Chúc mọi người luôn khỏe, vui và bình an.</textarea>
+          </label>
+          <label for="sign">Ký tên
+            <input type="text" id="sign" value="Gia đình nhỏ của chúng ta">
+          </label>
+        </div>
+      </section>
+
+      <section class="sec">
+        <h2>4. Tải về</h2>
+        <div class="actions">
+          <button class="btn primary" id="dl">Tải poster (PNG 1080×1350)</button>
+          <span class="status" id="status"></span>
+        </div>
+      </section>
+
+      <div class="tips">
+        <strong>Mẹo để poster đẹp như bản thiết kế</strong>
+        <ol>
+          <li>Ảnh đã xóa phông (PNG nền trong suốt) sẽ hòa vào poster tự nhiên nhất. Xóa phông miễn phí tại <a href="https://www.remove.bg/vi" target="_blank" rel="noopener">remove.bg</a> hoặc Canva.</li>
+          <li>Ảnh thường vẫn dùng được: app tự đặt vào khung tròn. Bạn đổi sang khung bo góc ở nút ngay dưới tên mỗi người.</li>
+          <li>Chọn ảnh chụp nửa người, mặt rõ, ánh sáng đều. Người lớn tuổi đặt ở ô to nhất sẽ thành điểm nhấn.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modal" hidden>
+  <div class="box">
+    <strong>Poster của bạn</strong>
+    <img id="modalImg" alt="Poster đã ghép ảnh">
+    <span class="status">Trên điện thoại: nhấn giữ ảnh và chọn Lưu ảnh. Trên máy tính: chuột phải vào ảnh và chọn Lưu hình ảnh.</span>
+    <button class="btn" id="closeModal">Đóng</button>
+  </div>
+</div>
+
+<script>
+(()=>{
+const W=1080,H=1350;
+const cv=document.getElementById('poster'),ctx=cv.getContext('2d');
+
+/* ---------- drawing helpers ---------- */
+const rad=d=>d*Math.PI/180;
+function lin(c,x0,y0,x1,y1,stops){const g=c.createLinearGradient(x0,y0,x1,y1);stops.forEach((s,i)=>g.addColorStop(s[0],s[1]));return g}
+function radial(c,x,y,r0,r1,stops){const g=c.createRadialGradient(x,y,r0,x,y,r1);stops.forEach(s=>g.addColorStop(s[0],s[1]));return g}
+function petal(c,L,wd){c.beginPath();c.moveTo(0,0);c.bezierCurveTo(-wd,-L*.3,-wd*.8,-L*.82,0,-L);c.bezierCurveTo(wd*.8,-L*.82,wd,-L*.3,0,0);c.closePath()}
+function lotus(c,x,y,s,rot=0,tone='pink',alpha=1){
+  c.save();c.translate(x,y);c.rotate(rad(rot));c.scale(s,s);c.globalAlpha=alpha;
+  const pal=tone==='gold'?['#fff4d6','#e9c46a','#b8862b']:tone==='white'?['#ffffff','#fbe3ea','#f1b6c8']:['#fff5f8','#f7a8c4','#e04b80'];
+  const layers=[[[-78,-48,-20,20,48,78],118,30],[[-55,-25,0,25,55],100,30],[[-14,14],82,26]];
+  layers.forEach(([angs,L,wd])=>angs.forEach(a=>{c.save();c.rotate(rad(a));petal(c,L,wd);
+    c.fillStyle=lin(c,0,0,0,-L,[[0,pal[0]],[.55,pal[1]],[1,pal[2]]]);c.fill();
+    c.strokeStyle='rgba(150,40,80,.18)';c.lineWidth=1.2;c.stroke();
+    c.beginPath();c.moveTo(0,-6);c.quadraticCurveTo(2,-L*.5,0,-L*.88);c.strokeStyle='rgba(255,255,255,.35)';c.stroke();c.restore()}));
+  c.beginPath();c.ellipse(0,-8,16,8,0,0,Math.PI*2);c.fillStyle=tone==='gold'?'#b8862b':'#f2c14e';c.fill();
+  c.restore();
+}
+function lotusLine(c,x,y,s,col){c.save();c.translate(x,y);c.scale(s,s);c.strokeStyle=col;c.lineWidth=2/s*1.2;
+  [[-70,110],[-35,120],[0,128],[35,120],[70,110]].forEach(([a,L])=>{c.save();c.rotate(rad(a));petal(c,L,30);c.stroke();c.restore()});
+  c.beginPath();c.moveTo(-150,10);c.quadraticCurveTo(0,40,150,10);c.stroke();c.restore()}
+function ribbon(c,segs,w,c1,c2,shadow=true){
+  c.save();c.beginPath();c.moveTo(segs[0][0],segs[0][1]);
+  for(let i=1;i<segs.length;i++){const s=segs[i];c.bezierCurveTo(s[0],s[1],s[2],s[3],s[4],s[5])}
+  c.lineWidth=w;c.lineCap='butt';c.lineJoin='round';
+  if(shadow){c.shadowColor='rgba(90,0,10,.28)';c.shadowBlur=26;c.shadowOffsetY=10}
+  c.strokeStyle=lin(c,0,0,W,H,[[0,c1],[.5,c2],[1,c1]]);c.stroke();
+  c.shadowColor='transparent';c.lineWidth=w*.28;c.strokeStyle='rgba(255,255,255,.22)';c.stroke();
+  c.lineWidth=w*.12;c.strokeStyle='rgba(255,255,255,.18)';c.stroke();c.restore();
+}
+function cloud(c,x,y,s,a=.9){c.save();c.translate(x,y);c.scale(s,s);
+  [[0,0,80],[70,10,65],[-70,12,60],[130,25,45],[-125,28,42],[30,-35,55]].forEach(([cx,cy,r])=>{
+    c.fillStyle=radial(c,cx,cy,r*.2,r,[[0,`rgba(255,255,255,${a})`],[.7,`rgba(255,255,255,${a*.7})`],[1,'rgba(255,255,255,0)']]);
+    c.beginPath();c.arc(cx,cy,r,0,Math.PI*2);c.fill()});c.restore()}
+function bloom(c,x,y,s,kind){c.save();c.translate(x,y);c.scale(s,s);
+  const p=kind==='poppy'?['#fff7cf','#f9cf55','#e39a1f']:['#ffe9ef','#ff8fb0','#e2456f'];
+  const n=kind==='poppy'?5:6;
+  for(let i=0;i<n;i++){c.save();c.rotate(i*2*Math.PI/n);c.beginPath();c.ellipse(0,-34,kind==='poppy'?34:26,40,0,0,Math.PI*2);
+    c.fillStyle=radial(c,0,-10,4,70,[[0,p[0]],[.55,p[1]],[1,p[2]]]);c.fill();c.strokeStyle='rgba(160,90,20,.15)';c.stroke();c.restore()}
+  c.beginPath();c.arc(0,0,12,0,Math.PI*2);c.fillStyle=kind==='poppy'?'#d98a1d':'#f6c445';c.fill();
+  for(let i=0;i<10;i++){c.beginPath();c.arc(Math.cos(i)*16,Math.sin(i)*16,2.4,0,Math.PI*2);c.fillStyle='#a45d12';c.fill()}
+  c.restore()}
+function leaf(c,x,y,s,rot,col='#4f9a4a'){c.save();c.translate(x,y);c.rotate(rad(rot));c.scale(s,s);c.beginPath();c.moveTo(0,0);c.quadraticCurveTo(30,-30,0,-80);c.quadraticCurveTo(-30,-30,0,0);c.fillStyle=col;c.fill();c.beginPath();c.moveTo(0,-4);c.lineTo(0,-72);c.strokeStyle='rgba(255,255,255,.35)';c.lineWidth=2;c.stroke();c.restore()}
+function lotusLeaf(c,x,y,r,col1,col2){c.save();c.translate(x,y);c.scale(1,.45);c.beginPath();c.arc(0,0,r,rad(-80),rad(250));c.lineTo(0,0);c.closePath();
+  c.fillStyle=radial(c,0,0,10,r,[[0,col2],[1,col1]]);c.fill();c.strokeStyle='rgba(255,255,255,.18)';c.lineWidth=3;
+  for(let a=-80;a<=250;a+=30){c.beginPath();c.moveTo(0,0);c.lineTo(Math.cos(rad(a))*r*.95,Math.sin(rad(a))*r*.95);c.stroke()}c.restore()}
+function txt(c,s,x,y,font,fill,opt={}){c.save();c.font=font;c.fillStyle=fill;c.textAlign=opt.align||'left';c.textBaseline=opt.base||'alphabetic';
+  if('letterSpacing' in c)c.letterSpacing=(opt.ls||0)+'px';if(opt.shadow){c.shadowColor=opt.shadow;c.shadowBlur=opt.blur||18;c.shadowOffsetY=opt.oy||4}
+  if(opt.stroke){c.strokeStyle=opt.stroke;c.lineWidth=opt.lw||2;c.strokeText(s,x,y)}else c.fillText(s,x,y);c.restore()}
+function wrapLines(c,s,font,maxW){c.save();c.font=font;const words=s.split(/\s+/);const out=[];let line='';
+  words.forEach(w=>{const t=line?line+' '+w:w;if(c.measureText(t).width>maxW&&line){out.push(line);line=w}else line=t});if(line)out.push(line);c.restore();return out}
+function msgBlock(c,s,x,y,maxW,font,fill,lh,align='center',maxLines=3,shadow){wrapLines(c,s,font,maxW).slice(0,maxLines).forEach((l,i)=>txt(c,l,x,y+i*lh,font,fill,{align,shadow,blur:10,oy:2}))}
+
+/* ---------- templates ---------- */
+const T=[
+{id:'lua',name:'Lụa đỏ hồng sen',ph:'rgba(255,255,255,.7)',ring:'#ffffff',
+ slots:[{l:'Mẹ',x:500,y:70,w:420,h:520},{l:'Bà',x:560,y:520,w:420,h:470},{l:'Chị',x:300,y:400,w:300,h:470},{l:'Vợ',x:700,y:890,w:330,h:460},{l:'Con gái',x:420,y:900,w:330,h:450}],
+ bg(c){c.fillStyle=lin(c,0,0,0,H,[[0,'#f8c3cb'],[.6,'#fbd9dd'],[1,'#f7c6cf']]);c.fillRect(0,0,W,H);
+  c.fillStyle=radial(c,720,520,150,470,[[0,'rgba(255,255,255,.95)'],[.78,'rgba(255,255,255,.9)'],[1,'rgba(255,255,255,0)']]);c.beginPath();c.arc(720,520,470,0,Math.PI*2);c.fill();
+  ribbon(c,[[380,-60],[620,80,860,120,760,330],[660,520,560,560,700,720],[840,880,1100,860,1020,1080]],62,'#c8102e','#ef3b3f');
+  lotus(c,560,330,.55,-10,'pink',.9);},
+ fg(c,t){ribbon(c,[[140,1010],[330,860,520,960,430,1120],[360,1240,200,1260,90,1380]],62,'#c8102e','#ef3b3f');
+  lotus(c,150,1300,1.7,0);lotus(c,350,1060,.75,-15);lotus(c,980,700,.7,15);
+  txt(c,'HAPPY VIETNAMESE',80,290,'500 30px "Playfair Display"','#b3172a',{ls:3});
+  txt(c,"WOMEN'S",76,375,'500 80px "Playfair Display"','#b3172a');txt(c,'DAY',76,462,'500 80px "Playfair Display"','#b3172a');
+  txt(c,'20',70,690,'300 240px "Cormorant Garamond"','#ffffff',{shadow:'rgba(160,30,60,.25)'});txt(c,'10',70,900,'300 240px "Cormorant Garamond"','#ffffff',{shadow:'rgba(160,30,60,.25)'});
+  msgBlock(c,t.msg,80,1000,300,'italic 500 24px "Playfair Display"','#8f1426',34,'left',4);
+  txt(c,t.sign,1040,1325,'500 22px "Be Vietnam Pro"','#8f1426',{align:'right'});}},
+{id:'troi',name:'Trời xanh tri ân',ph:'rgba(255,255,255,.75)',ring:'#ffffff',
+ slots:[{l:'Bà',x:560,y:300,w:360,h:470},{l:'Mẹ',x:150,y:310,w:340,h:450},{l:'Chị',x:320,y:450,w:420,h:520},{l:'Em gái',x:640,y:560,w:270,h:400}],
+ bg(c){c.fillStyle=lin(c,0,0,0,H,[[0,'#2f7fd6'],[.45,'#8cc4f2'],[.7,'#f7c4d8'],[1,'#f0558f']]);c.fillRect(0,0,W,H);
+  cloud(c,170,420,1.6,.75);cloud(c,900,300,1.3,.6);cloud(c,520,780,2.2,.55);cloud(c,950,640,1.1,.5);
+  txt(c,'20/10',540,520,'300 330px "Cormorant Garamond"','rgba(255,255,255,.85)',{align:'center'});
+  ribbon(c,[[540,980],[330,800,170,640,250,470],[310,340,480,360,540,470]],40,'#c8102e','#f2444c');
+  ribbon(c,[[540,470],[600,360,770,340,830,470],[910,640,750,800,540,980]],40,'#c8102e','#f2444c');},
+ fg(c,t){for(let i=0;i<46;i++){const x=(i*97)%1120-20,y=1000+((i*53)%300);c.save();c.globalAlpha=.85;bloom(c,x,y,.55+((i*7)%5)/10,'camellia');c.restore()}
+  c.fillStyle=lin(c,0,1000,0,H,[[0,'rgba(240,85,143,0)'],[.4,'rgba(236,72,132,.75)'],[1,'rgba(225,50,115,.95)']]);c.fillRect(0,1000,W,350);
+  bloom(c,230,520,.9,'camellia');leaf(c,200,570,.7,-120);bloom(c,860,560,.85,'camellia');leaf(c,900,600,.7,120);bloom(c,560,960,.8,'camellia');
+  txt(c,'Chúc Mừng',540,150,'700 112px "Dancing Script"','#ffffff',{align:'center',shadow:'rgba(20,60,120,.35)'});
+  txt(c,'NGÀY PHỤ NỮ VIỆT NAM',540,215,'500 40px "Playfair Display"','#ffffff',{align:'center',ls:2,shadow:'rgba(20,60,120,.35)'});
+  txt(c,'Happy',540,1050,'700 80px "Dancing Script"','#ffffff',{align:'center',shadow:'rgba(120,0,40,.35)'});
+  txt(c,"Vietnamese Women's Day",540,1118,'italic 700 52px "Playfair Display"','#ffffff',{align:'center',shadow:'rgba(120,0,40,.35)'});
+  msgBlock(c,'“'+t.msg+'”',540,1190,880,'500 28px "Be Vietnam Pro"','#ffffff',40,'center',2,'rgba(120,0,40,.4)');
+  txt(c,'— '+t.sign+' —',540,1310,'500 24px "Be Vietnam Pro"','#ffffff',{align:'center'});}},
+{id:'nang',name:'Nắng vàng mây hồng',ph:'rgba(255,255,255,.75)',ring:'#ffffff',
+ slots:[{l:'Bà',x:390,y:40,w:300,h:400},{l:'Mẹ',x:70,y:150,w:340,h:430},{l:'Chị',x:700,y:150,w:300,h:390},{l:'Vợ',x:250,y:520,w:320,h:460},{l:'Con gái',x:580,y:500,w:340,h:470}],
+ bg(c){c.fillStyle=radial(c,540,500,100,900,[[0,'#fde3d9'],[1,'#f2a493']]);c.fillRect(0,0,W,H);
+  c.fillStyle='rgba(255,255,255,.85)';c.beginPath();c.arc(540,470,360,0,Math.PI*2);c.fill();
+  c.fillStyle='rgba(230,120,110,.25)';c.beginPath();c.moveTo(0,700);c.lineTo(180,560);c.lineTo(330,690);c.lineTo(480,600);c.lineTo(700,720);c.lineTo(880,580);c.lineTo(1080,700);c.lineTo(1080,800);c.lineTo(0,800);c.fill();
+  ribbon(c,[[-40,420],[160,330,330,520,250,640],[180,760,330,860,470,760]],48,'#a50d1d','#e0242f');
+  ribbon(c,[[1120,380],[930,300,780,480,860,600],[930,720,780,860,640,780]],48,'#a50d1d','#e0242f');
+  [[110,640,.9],[960,620,.85],[540,600,.7],[300,170,.6],[800,150,.6]].forEach(([x,y,s])=>bloom(c,x,y,s,'poppy'));},
+ fg(c,t){cloud(c,140,1000,2.2,.95);cloud(c,560,1040,2.6,.95);cloud(c,960,990,2.1,.95);
+  c.fillStyle=lin(c,0,960,0,H,[[0,'rgba(255,255,255,0)'],[.3,'rgba(255,255,255,.92)'],[1,'#fff7f4']]);c.fillRect(0,960,W,390);
+  ribbon(c,[[380,990],[470,880,620,900,660,990]],48,'#a50d1d','#e0242f');
+  [[90,900,1.05],[1000,880,1],[300,980,.75],[790,970,.8]].forEach(([x,y,s])=>bloom(c,x,y,s,'poppy'));
+  txt(c,'HAPPY VIETNAMESE',540,1125,'500 62px "Playfair Display"','#8e1420',{align:'center',ls:2});
+  txt(c,"WOMEN'S DAY",540,1230,'500 108px "Playfair Display"','#8e1420',{align:'center'});
+  msgBlock(c,t.msg,540,1280,900,'500 22px "Be Vietnam Pro"','#8e1420',30,'center',1);
+  txt(c,t.sign,540,1325,'600 20px "Be Vietnam Pro"','#b0303c',{align:'center',ls:2});}},
+{id:'nhung',name:'Đỏ nhung vàng kim',ph:'rgba(255,224,160,.75)',ring:'#e3c06b',
+ slots:[{l:'Mẹ',x:350,y:330,w:380,h:640},{l:'Bà',x:90,y:470,w:320,h:520},{l:'Vợ',x:670,y:470,w:320,h:520}],
+ bg(c){c.fillStyle=radial(c,540,560,80,900,[[0,'#8d1426'],[.6,'#5c0a17'],[1,'#33040c']]);c.fillRect(0,0,W,H);
+  txt(c,'20',300,560,'300 420px "Cormorant Garamond"','rgba(0,0,0,0)',{align:'center',stroke:'rgba(227,192,107,.55)',lw:2.5});
+  txt(c,'10',780,560,'300 420px "Cormorant Garamond"','rgba(0,0,0,0)',{align:'center',stroke:'rgba(227,192,107,.55)',lw:2.5});
+  c.strokeStyle='rgba(227,192,107,.8)';c.lineWidth=2;c.strokeRect(40,40,W-80,H-80);c.lineWidth=1;c.strokeRect(54,54,W-108,H-108);},
+ fg(c,t){c.fillStyle=lin(c,0,900,0,H,[[0,'rgba(51,4,12,0)'],[.35,'rgba(51,4,12,.9)'],[1,'#33040c']]);c.fillRect(56,900,W-112,H-956);
+  lotusLine(c,540,1010,1.1,'rgba(227,192,107,.9)');lotus(c,150,1010,.7,-12,'gold');lotus(c,930,1010,.7,12,'gold');
+  txt(c,'Happy Vietnamese',540,170,'700 84px "Dancing Script"','#e9c46a',{align:'center'});
+  txt(c,"WOMEN'S DAY",540,260,'500 72px "Playfair Display"','#f6e3b0',{align:'center',ls:6});
+  txt(c,'NGÀY PHỤ NỮ VIỆT NAM · 20.10',540,1080,'500 26px "Be Vietnam Pro"','#e9c46a',{align:'center',ls:5});
+  msgBlock(c,t.msg,540,1140,820,'italic 500 30px "Playfair Display"','#f6e3b0',42,'center',2);
+  txt(c,t.sign,540,1265,'500 22px "Be Vietnam Pro"','#e9c46a',{align:'center',ls:2});}},
+{id:'sen',name:'Sen xanh ngọc',ph:'rgba(255,255,255,.7)',ring:'#f3d27a',defFrame:'circle',
+ slots:[{l:'Mẹ',x:330,y:430,w:420,h:420,f:'circle'},{l:'Bà',x:70,y:640,w:300,h:300,f:'circle'},{l:'Vợ',x:710,y:640,w:300,h:300,f:'circle'}],
+ bg(c){c.fillStyle=lin(c,0,0,0,H,[[0,'#0d4f4b'],[.55,'#1f7a6c'],[1,'#0b3d3a']]);c.fillRect(0,0,W,H);
+  c.fillStyle='rgba(243,210,122,.08)';for(let i=0;i<9;i++){c.beginPath();c.arc(540,640,120+i*70,0,Math.PI*2);c.lineWidth=1;c.strokeStyle='rgba(243,210,122,.12)';c.stroke()}
+  lotusLeaf(c,140,380,170,'#2e8b57','#5fb37c');lotusLeaf(c,960,330,150,'#2e8b57','#5fb37c');},
+ fg(c,t){lotusLeaf(c,150,1100,260,'#1f6b45','#4aa66a');lotusLeaf(c,900,1130,280,'#1f6b45','#4aa66a');lotusLeaf(c,540,1260,240,'#1a5c3c','#3f9660');
+  lotus(c,250,1050,1.05,-10);lotus(c,820,1060,1.2,8);lotus(c,540,960,.75,0,'white');
+  txt(c,'Mừng ngày',540,170,'700 84px "Dancing Script"','#fbe8c6',{align:'center'});
+  txt(c,'PHỤ NỮ VIỆT NAM',540,262,'500 74px "Playfair Display"','#fbe8c6',{align:'center',ls:2});
+  txt(c,'20 · 10',540,350,'300 72px "Cormorant Garamond"','#f3d27a',{align:'center',ls:12});
+  msgBlock(c,t.msg,540,1190,860,'italic 500 28px "Playfair Display"','#fff6e0',40,'center',2,'rgba(0,0,0,.5)');
+  txt(c,t.sign,540,1310,'600 22px "Be Vietnam Pro"','#f3d27a',{align:'center',ls:2});}},
+{id:'vom',name:'Ba ô cửa ba thế hệ',ph:'rgba(255,255,255,.85)',ring:'#ffffff',defFrame:'rounded',
+ slots:[{l:'Bà',x:70,y:380,w:290,h:520,f:'rounded',arch:true},{l:'Mẹ',x:395,y:340,w:290,h:560,f:'rounded',arch:true},{l:'Con gái',x:720,y:380,w:290,h:520,f:'rounded',arch:true}],
+ bg(c){c.fillStyle='#fbf0e4';c.fillRect(0,0,W,H);
+  [[70,380,290,520,'#f6c9b6'],[395,340,290,560,'#f1b2a5'],[720,380,290,520,'#f6c9b6']].forEach(([x,y,w,h,col])=>{archPath(c,x-14,y-14,w+28,h+28);c.fillStyle=col;c.fill()});
+  txt(c,'Cảm ơn những người phụ nữ',540,170,'italic 500 56px "Playfair Display"','#8a2a2f',{align:'center'});
+  txt(c,'của nhà mình',540,240,'700 70px "Dancing Script"','#c2434a',{align:'center'});},
+ fg(c,t){[[70,380,290,520],[395,340,290,560],[720,380,290,520]].forEach(([x,y,w,h])=>{
+    leaf(c,x+20,y+h+10,.9,-35,'#7c9a5e');leaf(c,x+50,y+h+20,.7,-10,'#9bb57a');bloom(c,x+30,y+h-10,.55,'camellia')});
+  txt(c,'20 / 10',540,1010,'300 120px "Cormorant Garamond"','#8a2a2f',{align:'center',ls:8});
+  txt(c,'NGÀY PHỤ NỮ VIỆT NAM',540,1062,'600 22px "Be Vietnam Pro"','#c2434a',{align:'center',ls:6});
+  msgBlock(c,t.msg,540,1130,860,'500 27px "Be Vietnam Pro"','#5b2427',40,'center',3);
+  txt(c,'— '+t.sign+' —',540,1300,'italic 500 26px "Playfair Display"','#8a2a2f',{align:'center'});}}
+];
+function archPath(c,x,y,w,h){const r=w/2;c.beginPath();c.moveTo(x,y+h);c.lineTo(x,y+r);c.arc(x+r,y+r,r,Math.PI,0);c.lineTo(x+w,y+h);c.closePath()}
+
+/* ---------- state ---------- */
+const S={t:0,sel:0,photos:{},msg:'',sign:''};
+const key=(ti,si)=>ti+':'+si;
+function photo(si){return S.photos[key(S.t,si)]}
+
+/* ---------- slot rendering ---------- */
+function frameOf(tpl,s,p){return p.frame||s.f||'cutout'}
+function drawSlot(c,tpl,s,p){
+  const img=p.img,iw=img.width,ih=img.height,mode=frameOf(tpl,s,p);
+  if(mode==='cutout'){
+    const off=document.createElement('canvas');off.width=s.w;off.height=s.h;const o=off.getContext('2d');
+    const sc=Math.min(s.w/iw,s.h/ih)*p.z,dw=iw*sc,dh=ih*sc;
+    o.drawImage(img,(s.w-dw)/2+p.ox,s.h-dh+p.oy,dw,dh);
+    o.globalCompositeOperation='destination-out';o.fillStyle=lin(o,0,s.h*.74,0,s.h,[[0,'rgba(0,0,0,0)'],[1,'rgba(0,0,0,1)']]);o.fillRect(0,s.h*.74,s.w,s.h*.26);
+    c.save();c.shadowColor='rgba(60,0,20,.25)';c.shadowBlur=24;c.drawImage(off,s.x,s.y);c.restore();return}
+  c.save();
+  let cx,cy,bw,bh;
+  if(mode==='circle'){const d=Math.min(s.w,s.h)-16;cx=s.x+s.w/2;cy=s.y+s.h/2;bw=bh=d;c.beginPath();c.arc(cx,cy,d/2,0,Math.PI*2)}
+  else{cx=s.x+s.w/2;cy=s.y+s.h/2;bw=s.w-12;bh=s.h-12;if(s.arch)archPath(c,s.x+6,s.y+6,bw,bh);else{c.beginPath();c.roundRect(s.x+6,s.y+6,bw,bh,36)}}
+  c.save();c.shadowColor='rgba(40,0,10,.35)';c.shadowBlur=26;c.shadowOffsetY=8;c.fillStyle=tpl.ring;c.fill();c.restore();
+  c.clip();const sc=Math.max(bw/iw,bh/ih)*p.z,dw=iw*sc,dh=ih*sc;c.drawImage(img,cx-dw/2+p.ox,cy-dh/2+p.oy,dw,dh);c.restore();
+  c.save();c.lineWidth=9;c.strokeStyle=tpl.ring;
+  if(mode==='circle'){c.beginPath();c.arc(cx,cy,bw/2,0,Math.PI*2)}else if(s.arch)archPath(c,s.x+6,s.y+6,bw,bh);else{c.beginPath();c.roundRect(s.x+6,s.y+6,bw,bh,36)}
+  c.stroke();c.restore();
+}
+function drawPlaceholder(c,tpl,s,i,selected){
+  c.save();const cx=s.x+s.w/2,mode=s.f||'cutout';
+  if(mode==='circle'){const d=Math.min(s.w,s.h)-16;c.beginPath();c.arc(cx,s.y+s.h/2,d/2,0,Math.PI*2)}
+  else if(s.arch)archPath(c,s.x+6,s.y+6,s.w-12,s.h-12);else{c.beginPath();c.roundRect(s.x+10,s.y+10,s.w-20,s.h-20,28)}
+  c.fillStyle='rgba(255,255,255,.14)';if(mode!=='cutout'||selected){c.fill();c.setLineDash([12,10]);c.lineWidth=selected?5:3;c.strokeStyle=selected?'#ffffff':tpl.ph;c.stroke();c.setLineDash([])}
+  const hr=Math.min(s.w,s.h)*.16,hy=s.y+s.h*.36;
+  c.fillStyle=tpl.ph;c.beginPath();c.arc(cx,hy,hr,0,Math.PI*2);c.fill();
+  c.beginPath();c.moveTo(cx-hr*2,hy+hr*3.1);c.quadraticCurveTo(cx-hr*1.9,hy+hr*1.3,cx,hy+hr*1.25);c.quadraticCurveTo(cx+hr*1.9,hy+hr*1.3,cx+hr*2,hy+hr*3.1);c.closePath();c.fill();
+  txt(c,'+ '+s.l,cx,hy+hr*4.1,'600 '+Math.max(22,Math.round(s.w/11))+'px "Be Vietnam Pro"','#ffffff',{align:'center',shadow:'rgba(0,0,0,.45)',blur:8,oy:1});
+  c.restore();
+}
+function render(c,ti,opts={}){
+  const tpl=T[ti];c.save();c.clearRect(0,0,W,H);tpl.bg(c);
+  tpl.slots.forEach((s,i)=>{const p=S.photos[key(ti,i)];
+    if(p)drawSlot(c,tpl,s,p);else if(!opts.export)drawPlaceholder(c,tpl,s,i,!opts.thumb&&i===S.sel&&ti===S.t)});
+  tpl.fg(c,{msg:S.msg,sign:S.sign});
+  if(!opts.export&&!opts.thumb){const s=tpl.slots[S.sel];if(s&&S.photos[key(ti,S.sel)]){c.save();c.setLineDash([14,10]);c.lineWidth=4;c.strokeStyle='rgba(255,255,255,.9)';c.strokeRect(s.x,s.y,s.w,s.h);c.restore()}}
+  c.restore();
+}
+function draw(){render(ctx,S.t)}
+
+/* ---------- template picker ---------- */
+const tplBox=document.getElementById('tpls');const thumbs=[];
+T.forEach((tpl,i)=>{const b=document.createElement('button');b.className='tpl';b.type='button';b.id='tpl-'+tpl.id;
+  const tc=document.createElement('canvas');tc.width=270;tc.height=338;b.appendChild(tc);const sp=document.createElement('span');sp.textContent=tpl.name;b.appendChild(sp);
+  b.addEventListener('click',()=>{S.t=i;S.sel=0;syncTpl();buildSlots();draw()});tplBox.appendChild(b);thumbs.push(tc)});
+function drawThumbs(){thumbs.forEach((tc,i)=>{const c=tc.getContext('2d');c.save();c.setTransform(tc.width/W,0,0,tc.height/H,0,0);render(c,i,{thumb:true});c.restore()})}
+function syncTpl(){[...tplBox.children].forEach((b,i)=>b.setAttribute('aria-pressed',i===S.t))}
+
+/* ---------- slot list ---------- */
+const slotBox=document.getElementById('slots'),fileIn=document.getElementById('file');let pending=0;
+const FR=[['cutout','Tách nền'],['circle','Tròn'],['rounded','Bo góc']];
+function buildSlots(){
+  const tpl=T[S.t];slotBox.innerHTML='';
+  tpl.slots.forEach((s,i)=>{const p=photo(i);const d=document.createElement('div');d.className='slot'+(i===S.sel?' sel':'');
+    const th=document.createElement('button');th.className='thumb';th.type='button';th.setAttribute('aria-label','Tải ảnh cho '+s.l);
+    if(p)th.style.backgroundImage=`url(${p.url})`;else th.textContent='+';th.onclick=()=>pick(i);d.appendChild(th);
+    const top=document.createElement('div');top.className='slot-top';
+    const nm=document.createElement('input');nm.type='text';nm.id=`name-${tpl.id}-${i}`;nm.value=s.l;nm.setAttribute('aria-label','Tên ô');nm.oninput=()=>{s.l=nm.value||'Người '+(i+1);draw();drawThumbs()};top.appendChild(nm);
+    const up=document.createElement('button');up.className='btn small';up.type='button';up.textContent=p?'Đổi ảnh':'Tải ảnh';up.onclick=()=>pick(i);top.appendChild(up);
+    if(p){const rm=document.createElement('button');rm.className='btn small';rm.type='button';rm.textContent='Xóa';rm.onclick=()=>{delete S.photos[key(S.t,i)];buildSlots();draw();drawThumbs()};top.appendChild(rm)}
+    d.appendChild(top);
+    const ctl=document.createElement('div');ctl.className='slot-ctl';
+    if(p){const seg=document.createElement('div');seg.className='seg';seg.setAttribute('role','group');seg.setAttribute('aria-label','Kiểu khung');
+      FR.forEach(([v,lab])=>{const b=document.createElement('button');b.type='button';b.textContent=lab;b.setAttribute('aria-pressed',frameOf(tpl,s,p)===v);b.onclick=()=>{p.frame=v;p.ox=0;p.oy=0;buildSlots();draw();drawThumbs()};seg.appendChild(b)});
+      ctl.appendChild(seg);
+      const z=document.createElement('input');z.type='range';z.min='0.5';z.max='2.5';z.step='0.01';z.value=p.z;z.id=`zoom-${tpl.id}-${i}`;z.setAttribute('aria-label','Phóng to ảnh '+s.l);
+      z.oninput=()=>{p.z=+z.value;draw()};z.onchange=drawThumbs;ctl.appendChild(z);
+    }else{const sp=document.createElement('span');sp.className='status';sp.textContent='Chưa có ảnh';ctl.appendChild(sp)}
+    d.appendChild(ctl);d.addEventListener('click',e=>{if(S.sel!==i){S.sel=i;[...slotBox.children].forEach((x,j)=>x.classList.toggle('sel',j===i));draw()}});
+    slotBox.appendChild(d)});
+}
+function pick(i){pending=i;S.sel=i;fileIn.value='';fileIn.click()}
+fileIn.addEventListener('change',()=>{const f=fileIn.files[0];if(!f)return;loadFile(f,pending)});
+function loadFile(f,i){
+  const url=URL.createObjectURL(f);const im=new Image();
+  im.onload=()=>{const max=1600,sc=Math.min(1,max/Math.max(im.width,im.height));const cc=document.createElement('canvas');cc.width=Math.round(im.width*sc);cc.height=Math.round(im.height*sc);cc.getContext('2d').drawImage(im,0,0,cc.width,cc.height);
+    const tc=document.createElement('canvas');tc.width=48;tc.height=48;const tx=tc.getContext('2d');tx.drawImage(cc,0,0,48,48);const px=tx.getImageData(0,0,48,48).data;let tr=0;for(let k=3;k<px.length;k+=4)if(px[k]<200)tr++;
+    const alpha=tr>48*48*.06;const tpl=T[S.t],s=tpl.slots[i];
+    const frame=alpha?'cutout':((s.f&&s.f!=='cutout')?s.f:'circle');
+    S.photos[key(S.t,i)]={img:cc,url,z:1,ox:0,oy:0,frame};
+    setStatus(alpha?'Ảnh đã xóa phông, đặt dạng tách nền.':'Ảnh có nền, đã đặt vào khung. Bạn có thể đổi kiểu khung.');
+    buildSlots();draw();drawThumbs()};
+  im.onerror=()=>setStatus('Không đọc được ảnh này. Hãy thử ảnh JPG hoặc PNG khác.');im.src=url;
+}
+
+/* ---------- canvas interaction ---------- */
+function pt(e){const r=cv.getBoundingClientRect();return{x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height}}
+function hit(p){const sl=T[S.t].slots;for(let i=sl.length-1;i>=0;i--){const s=sl[i];if(p.x>=s.x&&p.x<=s.x+s.w&&p.y>=s.y&&p.y<=s.y+s.h)return i}return -1}
+let drag=null;
+cv.addEventListener('pointerdown',e=>{const p=pt(e),i=hit(p);if(i<0)return;
+  if(i!==S.sel){S.sel=i;buildSlots();draw()}
+  const ph=photo(i);if(!ph){pick(i);return}
+  drag={i,sx:p.x,sy:p.y,ox:ph.ox,oy:ph.oy};cv.setPointerCapture(e.pointerId);cv.classList.add('dragging')});
+cv.addEventListener('pointermove',e=>{if(!drag)return;const p=pt(e),ph=photo(drag.i);if(!ph)return;ph.ox=drag.ox+(p.x-drag.sx);ph.oy=drag.oy+(p.y-drag.sy);draw()});
+const end=()=>{if(drag){drag=null;cv.classList.remove('dragging');drawThumbs()}};cv.addEventListener('pointerup',end);cv.addEventListener('pointercancel',end);
+cv.addEventListener('wheel',e=>{const ph=photo(S.sel);if(!ph)return;e.preventDefault();ph.z=Math.min(2.5,Math.max(.5,ph.z*(e.deltaY<0?1.05:.95)));const z=document.getElementById(`zoom-${T[S.t].id}-${S.sel}`);if(z)z.value=ph.z;draw()},{passive:false});
+cv.addEventListener('dragover',e=>e.preventDefault());
+cv.addEventListener('drop',e=>{e.preventDefault();const f=e.dataTransfer.files[0];if(!f)return;const i=hit(pt(e));loadFile(f,i<0?S.sel:i)});
+
+/* ---------- text ---------- */
+const msg=document.getElementById('msg'),sign=document.getElementById('sign');
+function syncText(){S.msg=msg.value.trim();S.sign=sign.value.trim();draw()}
+msg.addEventListener('input',syncText);sign.addEventListener('input',syncText);msg.addEventListener('change',drawThumbs);sign.addEventListener('change',drawThumbs);
+
+/* ---------- export ---------- */
+const st=document.getElementById('status');function setStatus(s){st.textContent=s}
+let downloads=null;
+(async()=>{try{downloads=window.claude?await window.claude.use('downloads'):null}catch(e){downloads=null}})();
+document.getElementById('dl').addEventListener('click',async()=>{
+  const out=document.createElement('canvas');out.width=W;out.height=H;render(out.getContext('2d'),S.t,{export:true});
+  const empty=T[S.t].slots.filter((s,i)=>!photo(i)).length;
+  const blob=await new Promise(r=>out.toBlob(r,'image/png'));
+  const note=empty?` (${empty} ô chưa có ảnh sẽ để trống)`:'';
+  if(downloads){try{await downloads.save({filename:'poster-20-10-'+T[S.t].id+'.png',data:blob});setStatus('Đã lưu poster'+note+'.');return}
+    catch(err){if(err&&err.code==='declined'){setStatus('Bạn đã hủy lưu.');return}if(err&&err.code==='rate_limited'){setStatus('Đang có một hộp thoại lưu mở, thử lại sau giây lát.');return}}}
+  const im=document.getElementById('modalImg');im.src=out.toDataURL('image/png');document.getElementById('modal').hidden=false;setStatus('Poster đã sẵn sàng'+note+'.');
+});
+document.getElementById('closeModal').onclick=()=>{document.getElementById('modal').hidden=true};
+
+/* ---------- boot ---------- */
+S.msg=msg.value.trim();S.sign=sign.value.trim();syncTpl();buildSlots();draw();drawThumbs();
+const faces=['500 30px "Playfair Display"','italic 500 30px "Playfair Display"','700 30px "Playfair Display"','italic 700 30px "Playfair Display"','300 30px "Cormorant Garamond"','700 30px "Dancing Script"','500 30px "Be Vietnam Pro"','600 30px "Be Vietnam Pro"'];
+Promise.all(faces.map(f=>document.fonts.load(f,'Ngày Phụ Nữ ạ 20'))).catch(()=>{}).then(()=>{draw();drawThumbs()});
+document.fonts.ready.then(()=>{draw();drawThumbs()});
+})();
+</script>
+
+</body></html>
